@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public enum DepartmentName { 식품, 운송, 전자, 통신, 화학, 스포츠, 의류, 디스플레이 };
 
@@ -16,9 +15,6 @@ public class GameManager : MonoBehaviour
 
     private int money;
     public int Money { get { return money; } }
-
-    [Header("UI Holder")]
-    public Text DateText;
 
     private void Awake()
     {
