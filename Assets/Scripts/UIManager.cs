@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Department Status UI Holder")]
     public List<Text> workerAmountText;
+    public Text remainPeriodText;
 
     /// <summary>
     /// 현재 살펴보고 있는 사업부의 현황판이 몇 번째 사업부인지를 저장해둡니다.
@@ -22,6 +23,8 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
+        ShowMoney();
+        ShowDate();
         ShowDepartmentStatus();
     }
 
@@ -39,6 +42,19 @@ public class UIManager : MonoBehaviour
         {
             workerAmountText[i].text = GameManager.instance.department[nowDepartment].worker[i].ToString() + " 명";
         }
+
+        remainPeriodText.text = "남은 개발 기간 : " + GameManager.instance.department[nowDepartment].Period.ToString() + " 개월";
+    }
+
+    private void ShowMoney()
+    {
+        moneyText.text = GameManager.instance.Money.ToString() + " ZS";
+    }
+
+    private void ShowDate()
+    {
+        int day = GameManager.instance.Day;
+        dateText.text = (day / 30) + "개월 " + (day % 30) + "일 째";
     }
 
     public void HireWorker(int type)
@@ -50,5 +66,11 @@ public class UIManager : MonoBehaviour
     {
         if(GameManager.instance.department[nowDepartment].worker[type] > 0)
             GameManager.instance.department[nowDepartment].worker[type] -= 1;
+    }
+
+    public void StartDevelop()
+    {
+        //신제품 개발에 착수
+        GameManager.instance.StartNewDevelop(nowDepartment);
     }
 }

@@ -6,12 +6,22 @@ public class Business
     public string name; //부서 이름
     public List<int> worker; // 직원수 { 상급, 중급, 하급 }
 
+    private int devStartDay;
     private int period; //개발 기간
-    public int Period { get { return period < 0 ? 0 : period - DecreasedPeriodByWorker(); } }
-
-    public void Initialize(DepartmentName departmentName)
+    public int Period
     {
-        name = departmentName.ToString();
+        get
+        {
+            if (period - DecreasedPeriodByTime() - DecreasedPeriodByWorker() < 0)
+                return 0;
+            else
+                return period - DecreasedPeriodByTime() - DecreasedPeriodByWorker();
+        }
+    }
+
+    public void Initialize(string departmentName)
+    {
+        name = departmentName;
         worker = new List<int> { 0, 15, 0 };
 
         period = -1;
@@ -35,6 +45,11 @@ public class Business
         period = nowMoney / 9000;
     }
 
+    private int DecreasedPeriodByTime()
+    {
+        return (GameManager.instance.Day - devStartDay) / 30;
+    }
+
     private int DecreasedPeriodByWorker()
     {
         return (worker[0] / 7) + (worker[1] / 15) + (worker[2] / 30);
@@ -43,5 +58,11 @@ public class Business
     public int MonthlyPay()
     {
         return worker[0] * 6000 + worker[1] * 3000 + worker[2] * 2000;
+    }
+
+    public void SetPeriod(int initialPeriod)
+    {
+        devStartDay = GameManager.instance.Day;
+        period = initialPeriod;
     }
 }
