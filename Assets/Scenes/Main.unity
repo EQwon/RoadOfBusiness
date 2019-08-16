@@ -427,7 +427,7 @@ RectTransform:
   m_Children:
   - {fileID: 1941296271}
   m_Father: {fileID: 1187379804}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -4908,8 +4908,8 @@ RectTransform:
   - {fileID: 1742732995}
   - {fileID: 1971554823}
   - {fileID: 1387985304}
-  - {fileID: 29186576}
   - {fileID: 1783181684}
+  - {fileID: 29186576}
   - {fileID: 554946174}
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -5704,7 +5704,7 @@ GameObject:
   - component: {fileID: 1387985306}
   - component: {fileID: 1387985305}
   m_Layer: 5
-  m_Name: "\uC11C\uD3FF\uD31D\uC5C5\uCC3D "
+  m_Name: "TV \uD31D\uC5C5\uCC3D"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6876,7 +6876,7 @@ RectTransform:
   m_Children:
   - {fileID: 1275571281}
   m_Father: {fileID: 1187379804}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

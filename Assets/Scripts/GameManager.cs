@@ -10,12 +10,18 @@ public class GameManager : MonoBehaviour
 
     public List<Business> department = new List<Business> { };
 
-    private int day;
+    private int day; //게임 시작 후 현재까지의 날짜
     public int Day { get { return day; } }
-    private float time;
-
-    private int money;
+    private int money; //자본
     public int Money { get { return money; } }
+    private int repuation; //평판
+    public int Reputation { get { return repuation; } }
+    private int creditRate; //신용도
+    public int CreditRate { get { return creditRate; } }
+    private int satisfaction; //직원 만족도
+    public int Satisfaction { get { return satisfaction; } }
+
+    private float time;
 
     private void Awake()
     {
@@ -40,6 +46,14 @@ public class GameManager : MonoBehaviour
         {
             day += 1;
             time = 0;
+        }
+
+        foreach (Business business in department)
+        {
+            if (business.Period == 0)
+            {
+                Debug.Log(business.name + " 부서 신제품 개발 완료!");
+            }
         }
 
         if (Day % 30 == 0) //매달 초에 하는 일

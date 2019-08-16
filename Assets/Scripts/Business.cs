@@ -13,7 +13,7 @@ public class Business
         get
         {
             if (period - DecreasedPeriodByTime() - DecreasedPeriodByWorker() < 0)
-                return 0;
+                return -1;
             else
                 return period - DecreasedPeriodByTime() - DecreasedPeriodByWorker();
         }
@@ -35,6 +35,7 @@ public class Business
     public void FireWorker(int i)
     {
         worker[i] -= 1;
+        //직원 만족도를 깍아야함.
     }
 
     public void StartDevelop()
