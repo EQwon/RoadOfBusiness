@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    public static UIManager instance;
+
     [Header("Basic UI Holder")]
     public Text dateText;
     public Text creditRateText;
@@ -15,11 +17,19 @@ public class UIManager : MonoBehaviour
     [Header("Department Status UI Holder")]
     public List<Text> workerAmountText;
     public Text remainPeriodText;
+    public GameObject beforeDev;
+    public GameObject duringDev;
 
     /// <summary>
     /// 현재 살펴보고 있는 사업부의 현황판이 몇 번째 사업부인지를 저장해둡니다.
     /// </summary>
     private int nowDepartment;
+
+    private void Awake()
+    {
+        if (instance == null) instance = this;
+        else Destroy(gameObject);
+    }
 
     private void Update()
     {
@@ -72,5 +82,11 @@ public class UIManager : MonoBehaviour
     {
         //신제품 개발에 착수
         GameManager.instance.StartNewDevelop(nowDepartment);
+    }
+
+    public void EndDevelop()
+    {
+        duringDev.SetActive(false);
+        beforeDev.SetActive(true);
     }
 }

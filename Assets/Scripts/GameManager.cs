@@ -14,8 +14,7 @@ public class GameManager : MonoBehaviour
     public int Day { get { return day; } }
     private int money; //자본
     public int Money { get { return money; } }
-    private int repuation; //평판
-    public int Reputation { get { return repuation; } }
+    public int repuation; //평판
     private int creditRate; //신용도
     public int CreditRate { get { return creditRate; } }
     private int satisfaction; //직원 만족도
@@ -33,7 +32,7 @@ public class GameManager : MonoBehaviour
     {
         day = 1;
         time = 0;
-        money = 45000;
+        money = 530000;
 
         CreateNewDepartment(0);
     }
@@ -58,6 +57,7 @@ public class GameManager : MonoBehaviour
 
         if (Day % 30 == 0) //매달 초에 하는 일
         {
+            Earn();
             PaySalary();
             day += 1; //다음 달 1일부터 시작하게 하기 위해
         }
@@ -68,8 +68,14 @@ public class GameManager : MonoBehaviour
         money -= amount;
     }
 
+    public void GainMoney(int a)
+    {
+        money += a;
+    }
+
     public void CreateNewDepartment(int num)
     {
+        money -= 100000 + (department.Count - 1) * 70000;
         Business business = new Business();
         business.Initialize(((DepartmentName)num).ToString());
         department.Add(business);
@@ -94,4 +100,12 @@ public class GameManager : MonoBehaviour
             UseMoney(department[i].MonthlyPay());
         }
     }
-}
+
+    private void Earn()
+    {
+        for (int i = 0; i < department.Count; i++)
+        {
+            GainMoney(department[i].earn);
+        }
+    }
+}   

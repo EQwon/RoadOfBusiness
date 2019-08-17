@@ -1,21 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class Business
 {
     public string name; //부서 이름
     public List<int> worker; // 직원수 { 상급, 중급, 하급 }
+    public int earn; //매달 수익
 
     private int devStartDay;
     private int period; //개발 기간
-    public int Period
+    public int Period //앞으로 남은 기간
     {
         get
         {
             if (period - DecreasedPeriodByTime() - DecreasedPeriodByWorker() < 0)
                 return -1;
             else
+            {
+                if (period - DecreasedPeriodByTime() - DecreasedPeriodByWorker() == 0)
+                    DevEnd();
                 return period - DecreasedPeriodByTime() - DecreasedPeriodByWorker();
+            }
         }
     }
 
@@ -25,6 +31,7 @@ public class Business
         worker = new List<int> { 0, 15, 0 };
 
         period = -1;
+        earn = -10000;
     }
 
     public void HireWorker(int i)
@@ -65,5 +72,14 @@ public class Business
     {
         devStartDay = GameManager.instance.Day;
         period = initialPeriod;
+    }
+
+    public void DevEnd()
+    {
+        //개발완료 현상
+        UIManager.instance.EndDevelop();
+        int response = Random.Range(1,7);
+        earn += GameManager.instance.Money / response;
+        GameManager.instance.repuation += (4 - response) * 10;
     }
 }
