@@ -42,7 +42,6 @@ public class Business
     public void FireWorker(int i)
     {
         worker[i] -= 1;
-        //직원 만족도를 깍아야함.
     }
 
     public void StartDevelop()
@@ -81,5 +80,7 @@ public class Business
         int response = Random.Range(1,7);
         earn += GameManager.instance.Money / response;
         GameManager.instance.repuation += (4 - response) * 10;
+
+        period = -1;
     }
 }

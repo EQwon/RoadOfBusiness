@@ -17,8 +17,8 @@ public class GameManager : MonoBehaviour
     public int repuation; //평판
     private int creditRate; //신용도
     public int CreditRate { get { return creditRate; } }
-    private int satisfaction; //직원 만족도
-    public int Satisfaction { get { return satisfaction; } }
+    private float satisfaction; //직원 만족도
+    public float Satisfaction { get { return satisfaction; } }
 
     private float time;
 
@@ -33,6 +33,8 @@ public class GameManager : MonoBehaviour
         day = 1;
         time = 0;
         money = 530000;
+        satisfaction = 500;
+        repuation = 0;
 
         CreateNewDepartment(0);
     }
@@ -41,7 +43,7 @@ public class GameManager : MonoBehaviour
     {
         time += Time.deltaTime;
 
-        if (time >= 0.5f)
+        if (time >= 0.1f)
         {
             day += 1;
             time = 0;
@@ -71,6 +73,11 @@ public class GameManager : MonoBehaviour
     public void GainMoney(int a)
     {
         money += a;
+    }
+
+    public void ChangeSatisfaction(float amount)
+    {
+        satisfaction += amount;
     }
 
     public void CreateNewDepartment(int num)

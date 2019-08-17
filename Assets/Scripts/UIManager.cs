@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     public Text satisfactionText;
     public Text reputationText;
 
+
     [Header("Department Status UI Holder")]
     public List<Text> workerAmountText;
     public Text remainPeriodText;
@@ -35,6 +36,8 @@ public class UIManager : MonoBehaviour
     {
         ShowMoney();
         ShowDate();
+        ShowRepuation();
+        ShowSatisfaction();
         ShowDepartmentStatus();
     }
 
@@ -67,6 +70,15 @@ public class UIManager : MonoBehaviour
         dateText.text = (day / 30) + "개월 " + (day % 30) + "일 째";
     }
 
+    private void ShowRepuation()
+    {
+        reputationText.text = GameManager.instance.repuation.ToString();
+    }
+
+    private void ShowSatisfaction()
+    {
+        satisfactionText.text = GameManager.instance.Satisfaction.ToString();
+    }
     public void HireWorker(int type)
     {
         GameManager.instance.department[nowDepartment].worker[type] += 1;
@@ -74,8 +86,11 @@ public class UIManager : MonoBehaviour
 
     public void FireWorker(int type)
     {
-        if(GameManager.instance.department[nowDepartment].worker[type] > 0)
+        if (GameManager.instance.department[nowDepartment].worker[type] > 0)
+        {
             GameManager.instance.department[nowDepartment].worker[type] -= 1;
+            GameManager.instance.ChangeSatisfaction(-0.3f);
+        }
     }
 
     public void StartDevelop()
