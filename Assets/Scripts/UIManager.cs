@@ -7,19 +7,29 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
-    [Header("Basic UI Holder")]
+    [Header("기본 UI Holder")]
+    public Text companyNameText;
     public Text dateText;
-    public Text creditRateText;
     public Text moneyText;
     public Text satisfactionText;
     public Text reputationText;
-
-
-    [Header("Department Status UI Holder")]
+    
+    [Header("사업부 현황판 UI Holder")]
     public List<Text> workerAmountText;
     public Text remainPeriodText;
     public GameObject beforeDev;
     public GameObject duringDev;
+
+    [Header("회사 현황판 UI Holder")]
+    public Text companyName;
+    public Text totalExpenditure;
+    public Text totalSales;
+    public Text netRevenue;
+    public Text totalWorkers;
+
+    [Header("식단표 UI Holder")]
+    public GameObject reputationIncreasedText;
+    public GameObject satisfactionIncreasedText;
 
     /// <summary>
     /// 현재 살펴보고 있는 사업부의 현황판이 몇 번째 사업부인지를 저장해둡니다.
@@ -32,13 +42,24 @@ public class UIManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
+    private void Start()
+    {
+        companyNameText.text = GameManager.instance.companyName;
+    }
+
     private void Update()
     {
+        //기본 정보
         ShowMoney();
         ShowDate();
         ShowRepuation();
         ShowSatisfaction();
+
+        //사업부 현황판 정보
         ShowDepartmentStatus();
+
+        //회사 전체 정보
+        ShowCompanyStatus();
     }
 
     public void WhichDepartment(int num)
@@ -103,5 +124,34 @@ public class UIManager : MonoBehaviour
     {
         duringDev.SetActive(false);
         beforeDev.SetActive(true);
+    }
+
+    public void ShowCompanyStatus()
+    {
+        companyName.text = GameManager.instance.companyName;
+        totalExpenditure.text = "" + " zs";
+        totalSales.text = "" + "  zs";
+        netRevenue.text = GameManager.instance.TotalNeRevenue() + " zs";
+        totalWorkers.text = GameManager.instance.TotalWorkerAmount().ToString() + " 명";
+    }
+
+    public IEnumerator ShowReputationIncrease(int amount)
+    {
+        reputationIncreasedText.GetComponent<Text>().text = "인식 +" + amount;
+        reputationIncreasedText.SetActive(true);
+
+        yield return new WaitForSeconds(1.5f);
+
+        reputationIncreasedText.SetActive(false);
+    }
+
+    public IEnumerator ShowSatisfactionIncrease(int amount)
+    {
+        satisfactionIncreasedText.GetComponent<Text>().text = "직원만족도 +" + amount;
+        satisfactionIncreasedText.SetActive(true);
+
+        yield return new WaitForSeconds(1.5f);
+
+        satisfactionIncreasedText.SetActive(false);
     }
 }

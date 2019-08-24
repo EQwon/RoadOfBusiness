@@ -10,13 +10,12 @@ public class GameManager : MonoBehaviour
 
     public List<Business> department = new List<Business> { };
 
+    public string companyName;
     private int day; //게임 시작 후 현재까지의 날짜
     public int Day { get { return day; } }
     private int money; //자본
     public int Money { get { return money; } }
     public int repuation; //평판
-    private int creditRate; //신용도
-    public int CreditRate { get { return creditRate; } }
     private float satisfaction; //직원 만족도
     public float Satisfaction { get { return satisfaction; } }
 
@@ -26,6 +25,9 @@ public class GameManager : MonoBehaviour
     {
         if (instance == null) instance = this;
         else Destroy(gameObject);
+
+        if (PlayerPrefs.HasKey("CompanyName")) companyName = PlayerPrefs.GetString("CompanyName");
+        else companyName = "1조zs";
     }
 
     private void Start()
@@ -41,6 +43,9 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        //매 Update 마다 체크해야 하는 요소
+        CheckGameOver();
+
         time += Time.deltaTime;
 
         if (time >= 0.1f)
@@ -114,5 +119,53 @@ public class GameManager : MonoBehaviour
         {
             GainMoney(department[i].earn);
         }
+    }
+
+    private void CheckGameOver()
+    {
+        if (money <= 0 || satisfaction <= 0)
+        {
+            Debug.LogError("Game Over");
+        }
+    }
+
+    public int TotalNeRevenue()
+    {
+        int amount = 0;
+
+        foreach (Business business in department)
+        {
+            amount += business.earn;
+        }
+
+        return amount;
+    }
+
+    public int TotalWorkerAmount()
+    {
+        int amount = 0;
+
+        foreach(Business business in department)
+        {
+            amount += business.worker[0] + business.worker[1] + business.worker[2];
+        }
+
+        return amount;
+    }
+
+    public void Donate()
+    {
+        UseMoney(10000);
+        int reputationIncreasedAmount = Random.Range(1, 16);
+        StartCoroutine(UIManager.instance.ShowReputationIncrease(reputationIncreasedAmount));
+        repuation += reputationIncreasedAmount;
+    }
+
+    public void Welfare()
+    {
+        UseMoney(10000);
+        int satisfactionIncreasedAmount = Random.Range(1, 21);
+        StartCoroutine(UIManager.instance.ShowSatisfactionIncrease(satisfactionIncreasedAmount));
+        satisfaction += satisfactionIncreasedAmount;
     }
 }   
