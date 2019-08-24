@@ -215,7 +215,7 @@ GameObject:
   - component: {fileID: 52966504}
   - component: {fileID: 52966503}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: "\uC601\uC5C5\uBD80"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -290,7 +290,7 @@ GameObject:
   - component: {fileID: 185433278}
   - component: {fileID: 185433277}
   m_Layer: 5
-  m_Name: "\uAC1C\uBC1C\uBD80"
+  m_Name: "\uAC1C\uBC1C\uBD80 \uC0C1\uC138\uC815\uBCF4"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -348,7 +348,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uAC1C\uBC1C\uBD80\n\uACFC\uC7A5 1\uBA85, \uB300\uB9AC 2\uBA85, \uC778\uD134
+  m_Text: "\uAC1C\uBC1C\uBD80\n\uC0C1\uAE09 1\uBA85,\uC911\uAE09 2\uBA85,\uD558\uAE09
     1\uBA85\n6\uAC1C\uC6D4 \uB0A8\uC74C"
 --- !u!222 &185433278
 CanvasRenderer:
@@ -1298,7 +1298,7 @@ GameObject:
   - component: {fileID: 1140061352}
   - component: {fileID: 1140061351}
   m_Layer: 5
-  m_Name: "\uC601\uC5C5\uBD80"
+  m_Name: "\uC2DD\uD488\uBD80 \uC0C1\uC138\uC815\uBCF4"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1356,7 +1356,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uC601\uC5C5\uBD80\n\uC0C1\uAE09 2\uBA85,\uD558\uAE09 3\uBA85\n3\uAC1C\uC6D4
+  m_Text: "\uC2DD\uD488\uBD80\n\uC0C1\uAE09 2\uBA85,\uD558\uAE09 3\uBA85\n3\uAC1C\uC6D4
     \uB0A8\uC74C"
 --- !u!222 &1140061352
 CanvasRenderer:
@@ -1457,7 +1457,7 @@ GameObject:
   - component: {fileID: 1305650579}
   - component: {fileID: 1305650578}
   m_Layer: 5
-  m_Name: "\uC601\uC5C5\uBD80"
+  m_Name: "\uC2DD\uD488\uBD80"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1532,7 +1532,7 @@ GameObject:
   - component: {fileID: 1371074287}
   - component: {fileID: 1371074286}
   m_Layer: 5
-  m_Name: "\uC601\uC5C5\uBD80 (1)"
+  m_Name: "\uC601\uC5C5\uBD80 \uC0C1\uC138\uC815\uBCF4"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2647,7 +2647,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1000.0001, y: 75}
+  m_AnchoredPosition: {x: 1000, y: 75}
   m_SizeDelta: {x: 400, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1902890427
