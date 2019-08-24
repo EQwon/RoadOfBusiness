@@ -125,7 +125,7 @@ public class GameManager : MonoBehaviour
     {
         if (money <= 0 || satisfaction <= 0)
         {
-            Debug.LogError("Game Over");
+            Time.timeScale = 0;
         }
     }
 

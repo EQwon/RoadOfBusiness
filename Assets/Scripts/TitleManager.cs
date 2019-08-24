@@ -17,6 +17,7 @@ public class TitleManager : MonoBehaviour
 
     private void Start()
     {
+        Time.timeScale = 1;
         nameInput.SetActive(true);
         startPanel.SetActive(false);
 
