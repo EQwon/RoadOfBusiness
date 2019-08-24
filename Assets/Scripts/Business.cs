@@ -14,11 +14,11 @@ public class Business
     {
         get
         {
-            if (period - DecreasedPeriodByTime() - DecreasedPeriodByWorker() < 0)
+            if (devStartDay == 0)
                 return -1;
             else
             {
-                if (period - DecreasedPeriodByTime() - DecreasedPeriodByWorker() == 0)
+                if (period - DecreasedPeriodByTime() - DecreasedPeriodByWorker() <= 0)
                     DevEnd();
                 return period - DecreasedPeriodByTime() - DecreasedPeriodByWorker();
             }
@@ -27,6 +27,7 @@ public class Business
 
     public void Initialize(string departmentName)
     {
+        devStartDay = 0;
         name = departmentName;
         worker = new List<int> { 0, 15, 0 };
 

@@ -98,7 +98,7 @@ public class UIManager : MonoBehaviour
 
     private void ShowSatisfaction()
     {
-        satisfactionText.text = GameManager.instance.Satisfaction.ToString();
+        satisfactionText.text = GameManager.instance.Satisfaction.ToString("#.0");
     }
     public void HireWorker(int type)
     {
