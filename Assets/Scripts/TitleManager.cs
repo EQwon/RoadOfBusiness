@@ -56,3 +56,4 @@ public class TitleManager : MonoBehaviour
         SceneManager.LoadScene(1);
     }
 }
+
