@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
 
         time += Time.deltaTime;
 
-        if (time >= 0.1f)
+        if (time >= 1f)
         {
             day += 1;
             time = 0;
