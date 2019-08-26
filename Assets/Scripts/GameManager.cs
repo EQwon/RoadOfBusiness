@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum DepartmentName { 식품, 운송, 전자, 통신, 화학, 스포츠, 의류, 디스플레이 };
+public enum DepartmentName { 식품, 운송, 전자, 통신, 화학, 스포츠, 의류, IT };
 
 public class GameManager : MonoBehaviour
 {
@@ -38,6 +38,12 @@ public class GameManager : MonoBehaviour
         satisfaction = 500;
         repuation = 0;
 
+        for (int i = 0; i < 8; i++)
+        {
+            Business business = new Business();
+            business.Initialize(((DepartmentName)i).ToString());
+            department.Add(business);
+        }
         CreateNewDepartment(0);
     }
 
@@ -87,10 +93,14 @@ public class GameManager : MonoBehaviour
 
     public void CreateNewDepartment(int num)
     {
-        money -= 100000 + (department.Count - 1) * 70000;
-        Business business = new Business();
-        business.Initialize(((DepartmentName)num).ToString());
-        department.Add(business);
+        int enableDepartment = 0;
+        foreach (Business business in department)
+        {
+            if (business.enabled == true) enableDepartment += 1;
+        }
+
+        money -= 100000 + (enableDepartment - 1) * 70000;
+        department[num].enabled = true;
     }
 
     public void StartNewDevelop(int num)

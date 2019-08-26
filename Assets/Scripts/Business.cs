@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Business
 {
+    public bool enabled;
+
     public string name; //부서 이름
     public List<int> worker; // 직원수 { 상급, 중급, 하급 }
     public int earn; //매달 수익
@@ -27,6 +29,7 @@ public class Business
 
     public void Initialize(string departmentName)
     {
+        enabled = false;
         devStartDay = 0;
         name = departmentName;
         worker = new List<int> { 0, 15, 0 };

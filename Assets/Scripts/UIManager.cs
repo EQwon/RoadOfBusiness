@@ -13,8 +13,9 @@ public class UIManager : MonoBehaviour
     public Text moneyText;
     public Text satisfactionText;
     public Text reputationText;
-    
+
     [Header("사업부 현황판 UI Holder")]
+    public Text departmentName;
     public List<Text> workerAmountText;
     public Text remainPeriodText;
     public GameObject beforeDev;
@@ -72,12 +73,17 @@ public class UIManager : MonoBehaviour
     /// </summary>
     private void ShowDepartmentStatus()
     {
+        departmentName.text = GameManager.instance.department[nowDepartment].name;
         for (int i = 0; i < 3; i++)
         {
             workerAmountText[i].text = GameManager.instance.department[nowDepartment].worker[i].ToString() + " 명";
         }
 
-        remainPeriodText.text = "남은 개발 기간 : " + GameManager.instance.department[nowDepartment].Period.ToString() + " 개월";
+        if (GameManager.instance.department[nowDepartment].Period != -1)
+        {
+            remainPeriodText.text = GameManager.instance.department[nowDepartment].Period.ToString() + " 개월";
+        }
+        else remainPeriodText.text = "";
     }
 
     private void ShowMoney()
