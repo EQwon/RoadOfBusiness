@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
         time = 0;
         money = 530000;
         satisfaction = 500;
-        repuation = 0;
+        repuation = 50;
 
         for (int i = 0; i < 8; i++)
         {
