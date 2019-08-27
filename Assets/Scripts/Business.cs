@@ -44,7 +44,7 @@ public class Business
     {
         enabled = true;
         devStartDay = 0;
-        worker = new List<int> { 0, 15, 0 };
+        worker = new List<int> { 0, 1, 5 };
 
         period = -1;
         profit = 0;
@@ -61,6 +61,7 @@ public class Business
     public void FireWorker(int i)
     {
         worker[i] -= 1;
+        GameManager.instance.ChangeSatisfaction(-3f);
 
         loss = 10000 + MonthlyPay();
     }
@@ -79,30 +80,25 @@ public class Business
 
     private int DecreasedPeriodByWorker()
     {
-        return ((worker[0] / 7) + (worker[1] / 15) + (worker[2] / 30)) * 30;
+        return (worker[0] * 10) + (worker[1] * 3) + worker[2];
     }
 
     private int MonthlyPay()
     {
-        return worker[0] * 6000 + worker[1] * 3000 + worker[2] * 2000;
+        return worker[0] * 6000 + worker[1] * 2100 + worker[2] * 800;
     }
 
     public void DevEnd()
     {
         //개발완료 현상
         UIManager.instance.EndDevelop();
-        int response = Random.Range(0,7);
-        profit += 10 * period * (int)Mathf.Pow(Mathf.Pow(2, 1 / 6), 2 - response);
-        GameManager.instance.repuation += 4 - response;
+        int response = Random.Range(0, 10);
+        int newPorfit = (int)(20f * period * Mathf.Pow(2.718f, 0.021f * period) / 3f);
+        int newRepu = 2 - response;
+        profit += newPorfit;
+        GameManager.instance.repuation += newRepu;
 
         devStartDay = 0;
-
-        //기간이 짧을 때는 이득이 적게
-        //30일 동안 개발 시 24개월간 원금회수
-        //120일 동안 개발 시 4개월간 원금회수
-        //150일 동안 개발 시 2개월간 원금회수
-        //120일 동안 개발에 필요한 원금 = 36000
-        //120일 개발 시 월 수익 = 9000
-        //profit += 
+        UIManager.instance.DevEndEvent(name, newPorfit, newRepu);
     }
 }

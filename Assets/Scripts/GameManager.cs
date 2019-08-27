@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
     {
         day = 1;
         time = 0;
-        money = 530000;
+        money = 430000;
         satisfaction = 500;
         repuation = 50;
 
@@ -164,5 +164,11 @@ public class GameManager : MonoBehaviour
         int satisfactionIncreasedAmount = Random.Range(1, 21);
         StartCoroutine(UIManager.instance.ShowSatisfactionIncrease(satisfactionIncreasedAmount));
         satisfaction += satisfactionIncreasedAmount;
+    }
+
+    public void ChangeTimeScale(float amount)
+    {
+        if (Time.timeScale * amount <= 99f && Time.timeScale * amount >= 0.1f)
+            Time.timeScale *= amount;
     }
 }   

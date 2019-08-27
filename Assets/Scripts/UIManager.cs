@@ -37,6 +37,11 @@ public class UIManager : MonoBehaviour
     public GameObject reputationIncreasedText;
     public GameObject satisfactionIncreasedText;
 
+    [Header("이벤트 UI Holder")]
+    public GameObject eventPanel;
+    public Text eventNameText;
+    public Text eventContentsText;
+
     /// <summary>
     /// 현재 살펴보고 있는 사업부의 현황판이 몇 번째 사업부인지를 저장해둡니다.
     /// </summary>
@@ -75,6 +80,16 @@ public class UIManager : MonoBehaviour
     public void WhichDepartment(int num)
     {
         nowDepartment = num;
+        if (GameManager.instance.department[nowDepartment].Period != -1)
+        {
+            duringDev.SetActive(true);
+            beforeDev.SetActive(false);
+        }
+        else
+        {
+            duringDev.SetActive(false);
+            beforeDev.SetActive(true);
+        }
     }
 
     /// <summary>
@@ -83,9 +98,9 @@ public class UIManager : MonoBehaviour
     private void ShowDepartmentStatus()
     {
         departmentName.text = GameManager.instance.department[nowDepartment].name;
-        monthlyProfit.text = GameManager.instance.department[nowDepartment].profit.ToString() + "ZS";
-        monthlyLoss.text = GameManager.instance.department[nowDepartment].loss.ToString() + "ZS";
-        monthlyNetProfit.text = (GameManager.instance.department[nowDepartment].profit - GameManager.instance.department[nowDepartment].loss).ToString() + "ZS";
+        monthlyProfit.text = GameManager.instance.department[nowDepartment].profit.ToString() + " ZS";
+        monthlyLoss.text = GameManager.instance.department[nowDepartment].loss.ToString() + " ZS";
+        monthlyNetProfit.text = (GameManager.instance.department[nowDepartment].profit - GameManager.instance.department[nowDepartment].loss).ToString() + " ZS";
 
         //직원 수 불러오기
         for (int i = 0; i < 3; i++)
@@ -102,7 +117,7 @@ public class UIManager : MonoBehaviour
         else remainPeriodText.text = "";
 
         //개발 시작 전, 투자 금액 설정하기
-        devInvestMoneyText.text = devInvestMoney.ToString() + "ZS";
+        devInvestMoneyText.text = devInvestMoney.ToString() + " ZS";
 
         //투자 금액에 따른 예상 기간 설정하기
         int day = devInvestMoney / 300;
@@ -111,7 +126,7 @@ public class UIManager : MonoBehaviour
 
     private void ShowMoney()
     {
-        moneyText.text = GameManager.instance.Money.ToString() + "ZS";
+        moneyText.text = GameManager.instance.Money.ToString() + " ZS";
     }
 
     private void ShowDate()
@@ -131,15 +146,14 @@ public class UIManager : MonoBehaviour
     }
     public void HireWorker(int type)
     {
-        GameManager.instance.department[nowDepartment].worker[type] += 1;
+        GameManager.instance.department[nowDepartment].HireWorker(type);
     }
 
     public void FireWorker(int type)
     {
         if (GameManager.instance.department[nowDepartment].worker[type] > 0)
         {
-            GameManager.instance.department[nowDepartment].worker[type] -= 1;
-            GameManager.instance.ChangeSatisfaction(-0.3f);
+            GameManager.instance.department[nowDepartment].FireWorker(type);            
         }
     }
 
@@ -164,8 +178,8 @@ public class UIManager : MonoBehaviour
     public void ShowCompanyStatus()
     {
         companyName.text = GameManager.instance.companyName;
-        totalLossText.text = GameManager.instance.TotalLoss() + "ZS";
-        totalProfitText.text = GameManager.instance.TotalProfit() + "ZS";
+        totalLossText.text = GameManager.instance.TotalLoss() + " ZS";
+        totalProfitText.text = GameManager.instance.TotalProfit() + " ZS";
         totalNetProfit.text = (GameManager.instance.TotalProfit() - GameManager.instance.TotalLoss()) + "ZS";
         totalWorkers.text = GameManager.instance.TotalWorkerAmount() + "명";
     }
@@ -188,5 +202,12 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
 
         satisfactionIncreasedText.SetActive(false);
+    }
+
+    public void DevEndEvent(string departmentName, int profit, int repu)
+    {
+        eventPanel.SetActive(true);
+        eventNameText.text = "[" + departmentName + "] 부서 신제품 개발 성공!";
+        eventContentsText.text = "월 이익이 <color=#FF0000>" + profit + " ZS</color> 만큼 증가합니다.\n 인식이 <color=#008000ff>" + repu + "</color>만큼 변화합니다.";
     }
 }
