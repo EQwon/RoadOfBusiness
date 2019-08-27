@@ -70,8 +70,7 @@ public class GameManager : MonoBehaviour
 
         if (Day % 30 == 0) //매달 초에 하는 일
         {
-            Earn();
-            PaySalary();
+            UseMoney(TotalLoss() - TotalProfit());
             day += 1; //다음 달 1일부터 시작하게 하기 위해
         }
     }
@@ -79,11 +78,6 @@ public class GameManager : MonoBehaviour
     public void UseMoney(int amount)
     {
         money -= amount;
-    }
-
-    public void GainMoney(int a)
-    {
-        money += a;
     }
 
     public void ChangeSatisfaction(float amount)
@@ -100,35 +94,40 @@ public class GameManager : MonoBehaviour
         }
 
         money -= 100000 + (enableDepartment - 1) * 70000;
-        department[num].enabled = true;
+        department[num].Create();
     }
 
-    public void StartNewDevelop(int num)
+    public void StartNewDevelop(int num, int investMoney)
     {
-        //'현재 자본'을 저장해둔다.
-        int nowMoney = money;
+        //신제품 개발에 필요한 금액 차감
+        UseMoney(investMoney);
 
-        //1. 신제품 개발에 필요한 금액 차감 = 현재 자본 / 12
-        UseMoney(nowMoney / 12);
-
-        //2. 기본 출시기간 설정 = 현재 자본 / 9000
-        department[num].SetPeriod(nowMoney / 9000);
+        //해당 부서 개발 시작
+        department[num].StartDevelop(investMoney);
     }
 
-    private void PaySalary()
+    public int TotalProfit()
     {
+        int profit = 0;
+
         for (int i = 0; i < department.Count; i++)
         {
-            UseMoney(department[i].MonthlyPay());
+            profit += department[i].profit;
         }
+
+        return profit;
     }
 
-    private void Earn()
+    public int TotalLoss()
     {
+        int loss = 0;
+
         for (int i = 0; i < department.Count; i++)
         {
-            GainMoney(department[i].earn);
+            loss += department[i].loss;
         }
+
+        return loss;
     }
 
     private void CheckGameOver()
@@ -137,18 +136,6 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("Game Over");
         }
-    }
-
-    public int TotalNeRevenue()
-    {
-        int amount = 0;
-
-        foreach (Business business in department)
-        {
-            amount += business.earn;
-        }
-
-        return amount;
     }
 
     public int TotalWorkerAmount()

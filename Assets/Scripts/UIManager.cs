@@ -16,16 +16,21 @@ public class UIManager : MonoBehaviour
 
     [Header("사업부 현황판 UI Holder")]
     public Text departmentName;
+    public Text monthlyProfit;
+    public Text monthlyLoss;
+    public Text monthlyNetProfit;
     public List<Text> workerAmountText;
     public Text remainPeriodText;
+    public Text devInvestMoneyText;
+    public Text estimatedDevPeriodText;
     public GameObject beforeDev;
     public GameObject duringDev;
 
     [Header("회사 현황판 UI Holder")]
     public Text companyName;
-    public Text totalExpenditure;
-    public Text totalSales;
-    public Text netRevenue;
+    public Text totalLossText;
+    public Text totalProfitText;
+    public Text totalNetProfit;
     public Text totalWorkers;
 
     [Header("식단표 UI Holder")]
@@ -36,6 +41,10 @@ public class UIManager : MonoBehaviour
     /// 현재 살펴보고 있는 사업부의 현황판이 몇 번째 사업부인지를 저장해둡니다.
     /// </summary>
     private int nowDepartment;
+    /// <summary>
+    /// 개발에 얼마나 투자할지를 임시로 저장해둡니다.
+    /// </summary>
+    private int devInvestMoney = 9000;
 
     private void Awake()
     {
@@ -74,21 +83,35 @@ public class UIManager : MonoBehaviour
     private void ShowDepartmentStatus()
     {
         departmentName.text = GameManager.instance.department[nowDepartment].name;
+        monthlyProfit.text = GameManager.instance.department[nowDepartment].profit.ToString() + "ZS";
+        monthlyLoss.text = GameManager.instance.department[nowDepartment].loss.ToString() + "ZS";
+        monthlyNetProfit.text = (GameManager.instance.department[nowDepartment].profit - GameManager.instance.department[nowDepartment].loss).ToString() + "ZS";
+
+        //직원 수 불러오기
         for (int i = 0; i < 3; i++)
         {
             workerAmountText[i].text = GameManager.instance.department[nowDepartment].worker[i].ToString() + " 명";
         }
 
+        //남은 개발 기간 표시
         if (GameManager.instance.department[nowDepartment].Period != -1)
         {
-            remainPeriodText.text = GameManager.instance.department[nowDepartment].Period.ToString() + " 개월";
+            int remainPeriod = GameManager.instance.department[nowDepartment].Period;
+            remainPeriodText.text = remainPeriod / 30 + "개월 " + remainPeriod % 30 + "일";
         }
         else remainPeriodText.text = "";
+
+        //개발 시작 전, 투자 금액 설정하기
+        devInvestMoneyText.text = devInvestMoney.ToString() + "ZS";
+
+        //투자 금액에 따른 예상 기간 설정하기
+        int day = devInvestMoney / 300;
+        estimatedDevPeriodText.text = day / 30 + "개월 " + day % 30 + "일";
     }
 
     private void ShowMoney()
     {
-        moneyText.text = GameManager.instance.Money.ToString() + " ZS";
+        moneyText.text = GameManager.instance.Money.ToString() + "ZS";
     }
 
     private void ShowDate()
@@ -120,10 +143,16 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void ChangeDevInvestMoney(int amount)
+    {
+        if(devInvestMoney + amount >= 0)
+            devInvestMoney += amount;
+    }
+
     public void StartDevelop()
     {
         //신제품 개발에 착수
-        GameManager.instance.StartNewDevelop(nowDepartment);
+        GameManager.instance.StartNewDevelop(nowDepartment,devInvestMoney);
     }
 
     public void EndDevelop()
@@ -135,10 +164,10 @@ public class UIManager : MonoBehaviour
     public void ShowCompanyStatus()
     {
         companyName.text = GameManager.instance.companyName;
-        totalExpenditure.text = "" + " zs";
-        totalSales.text = "" + "  zs";
-        netRevenue.text = GameManager.instance.TotalNeRevenue() + " zs";
-        totalWorkers.text = GameManager.instance.TotalWorkerAmount().ToString() + " 명";
+        totalLossText.text = GameManager.instance.TotalLoss() + "ZS";
+        totalProfitText.text = GameManager.instance.TotalProfit() + "ZS";
+        totalNetProfit.text = (GameManager.instance.TotalProfit() - GameManager.instance.TotalLoss()) + "ZS";
+        totalWorkers.text = GameManager.instance.TotalWorkerAmount() + "명";
     }
 
     public IEnumerator ShowReputationIncrease(int amount)
