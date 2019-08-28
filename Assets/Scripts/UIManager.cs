@@ -39,18 +39,24 @@ public class UIManager : MonoBehaviour
 
     [Header("전문가 UI Holder")]
     public Text expertNameText;
+    public Image expertFace;
     public Text expertSalaryText;
     public Text expertInfoText;
     public GameObject hireExpertButton;
     public GameObject fireExpertButton;
+
+    [Header("TV UI Holder")]
+    public List<Text> newsText;
 
     [Header("이벤트 UI Holder")]
     public GameObject eventPanel;
     public Text eventNameText;
     public Text eventContentsText;
 
-    [Header("GameOver UI Holder")]
+    [Header("GameEnd UI Holder")]
     public GameObject gameOverPanel;
+    public GameObject clearPanel;
+    public Text record;
 
     /// <summary>
     /// 현재 살펴보고 있는 사업부의 현황판이 몇 번째 사업부인지를 저장해둡니다.
@@ -87,6 +93,9 @@ public class UIManager : MonoBehaviour
         //사업부 현황판 정보
         ShowDepartmentStatus();
 
+        //TV 정보
+        ShowNews();
+
         //회사 전체 정보
         ShowCompanyStatus();
     }
@@ -94,16 +103,6 @@ public class UIManager : MonoBehaviour
     public void WhichDepartment(int num)
     {
         nowDepartment = num;
-        if (GameManager.instance.department[nowDepartment].Period != -1)
-        {
-            duringDev.SetActive(true);
-            beforeDev.SetActive(false);
-        }
-        else
-        {
-            duringDev.SetActive(false);
-            beforeDev.SetActive(true);
-        }
     }
 
     /// <summary>
@@ -122,13 +121,31 @@ public class UIManager : MonoBehaviour
             workerAmountText[i].text = GameManager.instance.department[nowDepartment].worker[i].ToString() + " 명";
         }
 
+        //개발 UI 표시
+        if (GameManager.instance.department[nowDepartment].Period > 0)
+        {
+            duringDev.SetActive(true);
+            beforeDev.SetActive(false);
+        }
+        else
+        {
+            duringDev.SetActive(false);
+            beforeDev.SetActive(true);
+        }
+
         //남은 개발 기간 표시
-        if (GameManager.instance.department[nowDepartment].Period != -1)
+        if (GameManager.instance.department[nowDepartment].Period >= 0)
         {
             int remainPeriod = GameManager.instance.department[nowDepartment].Period;
             remainPeriodText.text = remainPeriod / 30 + "개월 " + remainPeriod % 30 + "일";
+            remainPeriodText.color = Color.black;
         }
-        else remainPeriodText.text = "";
+        else
+        {
+            int remainPeriod = -GameManager.instance.department[nowDepartment].Period;
+            remainPeriodText.text = remainPeriod / 30 + "개월 " + remainPeriod % 30 + "일 감소";
+            remainPeriodText.color = Color.grey;
+        }
 
         //개발 시작 전, 투자 금액 설정하기
         devInvestMoneyText.text = string.Format("{0:#,### ZS}", devInvestMoney);
@@ -136,6 +153,17 @@ public class UIManager : MonoBehaviour
         //투자 금액에 따른 예상 기간 설정하기
         int day = devInvestMoney / 300;
         estimatedDevPeriodText.text = day / 30 + "개월 " + day % 30 + "일";
+    }
+
+    private void ShowNews()
+    {
+        List<string> news = GameManager.instance.news;
+
+        for (int i = 0; i < 4; i++)
+        {
+            if (news.Count <= i) continue;
+            newsText[i].text = news[i];
+        }
     }
 
     private void ShowMoney()
@@ -222,6 +250,7 @@ public class UIManager : MonoBehaviour
     {
         eventPanel.SetActive(true);
         eventNameText.text = "[" + departmentName + "] 부서 신제품 개발 성공!";
+        GameManager.instance.AddFlashNews("[" + departmentName + "] 부서 신제품 개발 성공!");
 
         if (response <= 3.3f) eventContentsText.text = "<color=#0000a0ff>반응이 좋지 않습니다...</color>\n";
         else if (response <= 6.7f) eventContentsText.text = "괜찮은 반응입니다.\n";
@@ -247,6 +276,7 @@ public class UIManager : MonoBehaviour
         }
 
         expertNameText.text = expert.name;
+        expertFace.sprite = expert.face;
         expertSalaryText.text = string.Format("{0:#,### ZS}", expert.salary);
         expertInfoText.text = expert.info;
     }

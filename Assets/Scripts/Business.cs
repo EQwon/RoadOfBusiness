@@ -18,12 +18,14 @@ public class Business
         get
         {
             if (devStartDay == 0)
-                return -1;
+            {
+                return -DecreasedPeriodByWorker() - DecreasePeriodByExpert();
+            }
             else
             {
-                if (period - DecreasedPeriodByTime() - DecreasedPeriodByWorker() <= 0)
+                if(period - DecreasedPeriodByTime() - DecreasedPeriodByWorker() - DecreasePeriodByExpert() <= 0)
                     DevEnd();
-                return period - DecreasedPeriodByTime() - DecreasedPeriodByWorker();
+                return period - DecreasedPeriodByTime() - DecreasedPeriodByWorker() - DecreasePeriodByExpert();
             }
         }
     }
@@ -31,10 +33,10 @@ public class Business
     public void Initialize(string departmentName)
     {
         enabled = false;
-        devStartDay = 0;
         name = departmentName;
         worker = new List<int> { 0, 0, 0 };
 
+        devStartDay = 0;
         period = -1;
         profit = 0;
         loss = 0;
@@ -92,9 +94,22 @@ public class Business
         return (worker[0] * 10) + (worker[1] * 3) + worker[2];
     }
 
+    private int DecreasePeriodByExpert()
+    {
+        int amount = 0;
+
+        if (GameManager.instance.experts[1].isHired == true) amount += 60;
+        if (GameManager.instance.experts[3].isHired == true) amount += 10;
+
+        return amount;
+    }
+
     private int MonthlyPay()
     {
-        return worker[0] * 6000 + worker[1] * 2100 + worker[2] * 800;
+        int pay = worker[0] * 6000 + worker[1] * 2100 + worker[2] * 800;
+
+        if (GameManager.instance.experts[5].isHired == true) pay = (int)(pay * 0.6f);
+        return pay;
     }
 
     public void DevEnd()
@@ -112,6 +127,7 @@ public class Business
         GameManager.instance.ChangeReputation(newRepu);
 
         devStartDay = 0;
+        period = -1;
         UIManager.instance.DevEndEvent(name, response, newPorfit, newRepu);
     }
 }
