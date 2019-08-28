@@ -1,23 +1,35 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum DepartmentName { 식품, 운송, 전자, 통신, 화학, 스포츠, 의류, IT };
+
+[System.Serializable]
+public class Expert
+{
+    public bool isHired;
+    public string name;
+    public int salary;
+    public string info;
+}
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
     public List<Business> department = new List<Business> { };
+    public List<Expert> experts;
 
     public string companyName;
     private int day; //게임 시작 후 현재까지의 날짜
     public int Day { get { return day; } }
     private int money; //자본
     public int Money { get { return money; } }
-    public int repuation; //평판
-    private float satisfaction; //직원 만족도
-    public float Satisfaction { get { return satisfaction; } }
+    private int reputation; //평판
+    public int Reputation { get { return reputation; } }
+    private int satisfaction; //직원 만족도
+    public int Satisfaction { get { return satisfaction; } }
 
     private float time;
 
@@ -36,7 +48,7 @@ public class GameManager : MonoBehaviour
         time = 0;
         money = 430000;
         satisfaction = 500;
-        repuation = 50;
+        reputation = 50;
 
         for (int i = 0; i < 8; i++)
         {
@@ -80,9 +92,16 @@ public class GameManager : MonoBehaviour
         money -= amount;
     }
 
-    public void ChangeSatisfaction(float amount)
+    public void ChangeSatisfaction(int amount)
     {
         satisfaction += amount;
+        if (satisfaction > 1000) satisfaction = 1000;
+    }
+
+    public void ChangeReputation(int amount)
+    {
+        reputation += amount;
+        if (reputation > 100) reputation = 100;
     }
 
     public void CreateNewDepartment(int num)
@@ -127,15 +146,29 @@ public class GameManager : MonoBehaviour
             loss += department[i].loss;
         }
 
+        loss += TotalExpertSalary();
+
         return loss;
     }
 
     private void CheckGameOver()
     {
-        if (money <= 0 || satisfaction <= 0)
+        if (money <= 0 || satisfaction <= 0 || reputation <= 0)
         {
-            Debug.LogError("Game Over");
+            GameOver();
         }
+    }
+
+    private int TotalExpertSalary()
+    {
+        int total = 0;
+
+        for (int i = 0; i < experts.Count; i++)
+        {
+            if (experts[i].isHired == true) total += experts[i].salary;
+        }
+
+        return total;
     }
 
     public int TotalWorkerAmount()
@@ -152,23 +185,34 @@ public class GameManager : MonoBehaviour
 
     public void Donate()
     {
-        UseMoney(10000);
-        int reputationIncreasedAmount = Random.Range(1, 16);
+        UseMoney(20000);
+        int reputationIncreasedAmount = Random.Range(1, 6);
         StartCoroutine(UIManager.instance.ShowReputationIncrease(reputationIncreasedAmount));
-        repuation += reputationIncreasedAmount;
+        ChangeReputation(reputationIncreasedAmount);
     }
 
     public void Welfare()
     {
-        UseMoney(10000);
+        UseMoney(20000);
         int satisfactionIncreasedAmount = Random.Range(1, 21);
         StartCoroutine(UIManager.instance.ShowSatisfactionIncrease(satisfactionIncreasedAmount));
-        satisfaction += satisfactionIncreasedAmount;
+        ChangeSatisfaction(satisfactionIncreasedAmount);
     }
 
     public void ChangeTimeScale(float amount)
     {
         if (Time.timeScale * amount <= 99f && Time.timeScale * amount >= 0.1f)
             Time.timeScale *= amount;
+    }
+
+    private void GameOver()
+    {
+        Time.timeScale = 0f;
+        UIManager.instance.gameOverPanel.SetActive(true);
+    }
+
+    public void BackToTitle()
+    {
+        SceneManager.LoadScene(0);
     }
 }   

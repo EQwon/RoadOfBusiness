@@ -37,10 +37,20 @@ public class UIManager : MonoBehaviour
     public GameObject reputationIncreasedText;
     public GameObject satisfactionIncreasedText;
 
+    [Header("전문가 UI Holder")]
+    public Text expertNameText;
+    public Text expertSalaryText;
+    public Text expertInfoText;
+    public GameObject hireExpertButton;
+    public GameObject fireExpertButton;
+
     [Header("이벤트 UI Holder")]
     public GameObject eventPanel;
     public Text eventNameText;
     public Text eventContentsText;
+
+    [Header("GameOver UI Holder")]
+    public GameObject gameOverPanel;
 
     /// <summary>
     /// 현재 살펴보고 있는 사업부의 현황판이 몇 번째 사업부인지를 저장해둡니다.
@@ -50,6 +60,10 @@ public class UIManager : MonoBehaviour
     /// 개발에 얼마나 투자할지를 임시로 저장해둡니다.
     /// </summary>
     private int devInvestMoney = 9000;
+    /// <summary>
+    /// 현재 살펴보고 있는 전문가가 몇 번째 전문가인지를 저장.
+    /// </summary>
+    private int nowExpert;
 
     private void Awake()
     {
@@ -98,9 +112,9 @@ public class UIManager : MonoBehaviour
     private void ShowDepartmentStatus()
     {
         departmentName.text = GameManager.instance.department[nowDepartment].name;
-        monthlyProfit.text = GameManager.instance.department[nowDepartment].profit.ToString() + " ZS";
-        monthlyLoss.text = GameManager.instance.department[nowDepartment].loss.ToString() + " ZS";
-        monthlyNetProfit.text = (GameManager.instance.department[nowDepartment].profit - GameManager.instance.department[nowDepartment].loss).ToString() + " ZS";
+        monthlyProfit.text = string.Format("{0:#,### ZS}", GameManager.instance.department[nowDepartment].profit);
+        monthlyLoss.text = string.Format("{0:#,### ZS}", GameManager.instance.department[nowDepartment].loss);
+        monthlyNetProfit.text = string.Format("{0:#,### ZS}", GameManager.instance.department[nowDepartment].profit - GameManager.instance.department[nowDepartment].loss);
 
         //직원 수 불러오기
         for (int i = 0; i < 3; i++)
@@ -117,7 +131,7 @@ public class UIManager : MonoBehaviour
         else remainPeriodText.text = "";
 
         //개발 시작 전, 투자 금액 설정하기
-        devInvestMoneyText.text = devInvestMoney.ToString() + " ZS";
+        devInvestMoneyText.text = string.Format("{0:#,### ZS}", devInvestMoney);
 
         //투자 금액에 따른 예상 기간 설정하기
         int day = devInvestMoney / 300;
@@ -126,7 +140,7 @@ public class UIManager : MonoBehaviour
 
     private void ShowMoney()
     {
-        moneyText.text = GameManager.instance.Money.ToString() + " ZS";
+        moneyText.text = string.Format("{0:#,### ZS}", GameManager.instance.Money);
     }
 
     private void ShowDate()
@@ -137,12 +151,12 @@ public class UIManager : MonoBehaviour
 
     private void ShowRepuation()
     {
-        reputationText.text = GameManager.instance.repuation.ToString();
+        reputationText.text = GameManager.instance.Reputation.ToString();
     }
 
     private void ShowSatisfaction()
     {
-        satisfactionText.text = GameManager.instance.Satisfaction.ToString("#.0");
+        satisfactionText.text = GameManager.instance.Satisfaction.ToString();
     }
     public void HireWorker(int type)
     {
@@ -178,9 +192,9 @@ public class UIManager : MonoBehaviour
     public void ShowCompanyStatus()
     {
         companyName.text = GameManager.instance.companyName;
-        totalLossText.text = GameManager.instance.TotalLoss() + " ZS";
-        totalProfitText.text = GameManager.instance.TotalProfit() + " ZS";
-        totalNetProfit.text = (GameManager.instance.TotalProfit() - GameManager.instance.TotalLoss()) + "ZS";
+        totalLossText.text = string.Format("{0:#,### ZS}", GameManager.instance.TotalLoss());
+        totalProfitText.text = string.Format("{0:#,### ZS}", GameManager.instance.TotalProfit());
+        totalNetProfit.text = string.Format("{0:#,### ZS}", GameManager.instance.TotalProfit() - GameManager.instance.TotalLoss());
         totalWorkers.text = GameManager.instance.TotalWorkerAmount() + "명";
     }
 
@@ -204,10 +218,70 @@ public class UIManager : MonoBehaviour
         satisfactionIncreasedText.SetActive(false);
     }
 
-    public void DevEndEvent(string departmentName, int profit, int repu)
+    public void DevEndEvent(string departmentName, float response, int profit, int repu)
     {
         eventPanel.SetActive(true);
         eventNameText.text = "[" + departmentName + "] 부서 신제품 개발 성공!";
-        eventContentsText.text = "월 이익이 <color=#FF0000>" + profit + " ZS</color> 만큼 증가합니다.\n 인식이 <color=#008000ff>" + repu + "</color>만큼 변화합니다.";
+
+        if (response <= 3.3f) eventContentsText.text = "<color=#0000a0ff>반응이 좋지 않습니다...</color>\n";
+        else if (response <= 6.7f) eventContentsText.text = "괜찮은 반응입니다.\n";
+        else eventContentsText.text = "<color=#FF0000>획기적입니다!</color>\n";
+
+        eventContentsText.text += "월 이익이 <color=#FF0000>" + string.Format("{0:#,### ZS}", profit) + "</color> 만큼 증가합니다.\n 인식이 <color=#008000ff>" + repu + "</color>만큼 변화합니다.";
+    }
+
+    public void ShowExpertStat(int num)
+    {
+        nowExpert = num;
+        Expert expert = GameManager.instance.experts[num];
+
+        if (expert.isHired == true)
+        {
+            fireExpertButton.SetActive(true);
+            hireExpertButton.SetActive(false);
+        }
+        else
+        {
+            hireExpertButton.SetActive(true);
+            fireExpertButton.SetActive(false);
+        }
+
+        expertNameText.text = expert.name;
+        expertSalaryText.text = string.Format("{0:#,### ZS}", expert.salary);
+        expertInfoText.text = expert.info;
+    }
+
+    public void HireExpert()
+    {
+        if (GameManager.instance.experts[nowExpert].isHired == true) return;
+        GameManager.instance.experts[nowExpert].isHired = true;
+        HireExpertEvent();
+    }
+
+    public void FireExpert()
+    {
+        if (GameManager.instance.experts[nowExpert].isHired == false) return;
+        GameManager.instance.experts[nowExpert].isHired = false;
+        FireExpertEvent();
+    }
+
+    private void HireExpertEvent()
+    {
+        eventPanel.SetActive(true);
+
+        Expert expert = GameManager.instance.experts[nowExpert];
+        eventNameText.text = "[" + expert.name + "] 전문가 <color=#FF0000>고용</color>!";
+        eventContentsText.text = expert.info + "\n";
+        eventContentsText.text += "월 지출이 " + string.Format("{0:#,### ZS}", expert.salary) + "만큼 <color=#0000a0ff>증가</color>합니다.";
+    }
+
+    private void FireExpertEvent()
+    {
+        eventPanel.SetActive(true);
+
+        Expert expert = GameManager.instance.experts[nowExpert];
+        eventNameText.text = "[" + expert.name + "] 전문가 <color=#0000a0ff>해고</color>!";
+        eventContentsText.text = "";
+        eventContentsText.text += "월 지출이 " + string.Format("{0:#,### ZS}", expert.salary) + "만큼 <color=#FF0000>감소</color>합니다.";
     }
 }

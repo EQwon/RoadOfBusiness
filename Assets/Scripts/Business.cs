@@ -48,22 +48,31 @@ public class Business
 
         period = -1;
         profit = 0;
-        loss = 10000 + MonthlyPay();
+        loss = MaintenancePay() + MonthlyPay();
+    }
+
+    private int MaintenancePay()
+    {
+        int pay = 10000;
+        if (GameManager.instance.experts[0].isHired == true)
+            pay /= 2;
+
+        return pay;
     }
 
     public void HireWorker(int i)
     {
         worker[i] += 1;
 
-        loss = 10000 + MonthlyPay();
+        loss = MaintenancePay() + MonthlyPay();
     }
 
     public void FireWorker(int i)
     {
         worker[i] -= 1;
-        GameManager.instance.ChangeSatisfaction(-3f);
+        GameManager.instance.ChangeSatisfaction(-3 * (3 - i) * (3 - i));
 
-        loss = 10000 + MonthlyPay();
+        loss = MaintenancePay() + MonthlyPay();
     }
 
     public void StartDevelop(int investMoney)
@@ -92,13 +101,17 @@ public class Business
     {
         //개발완료 현상
         UIManager.instance.EndDevelop();
-        int response = Random.Range(0, 10);
-        int newPorfit = (int)(20f * period * Mathf.Pow(2.718f, 0.021f * period) / 3f);
-        int newRepu = 2 - response;
+        float response = Random.Range(0, 10);
+        int newPorfit = (int)((15 + response) * period * Mathf.Pow(2.718f, 0.021f * period) / 3f);
+        int newRepu = (int)((7.25 + response / 5) * Mathf.Log(period) - 34.65f);
+
+        if (response >= 3.3f && newRepu < 0) newRepu = 0;
+        if (response >= 6.7f && newRepu < 3) newRepu = 3;
+
         profit += newPorfit;
-        GameManager.instance.repuation += newRepu;
+        GameManager.instance.ChangeReputation(newRepu);
 
         devStartDay = 0;
-        UIManager.instance.DevEndEvent(name, newPorfit, newRepu);
+        UIManager.instance.DevEndEvent(name, response, newPorfit, newRepu);
     }
 }
